@@ -4,8 +4,14 @@ const sgMail = require("@sendgrid/mail");
 
 require("dotenv").config(); // Ensure dotenv is required before accessing process.env
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(
+  cors({
+    origin: "https://voting-frontend-delta.vercel.app", // Allow only this origin
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 const port = 5000;
 
