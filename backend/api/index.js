@@ -8,8 +8,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: "https://voting-frontend-delta.vercel.app", // Allow only this origin
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
