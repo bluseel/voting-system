@@ -19,7 +19,7 @@ app.use(express.json());
 //   })
 // );
 
-forlocal;
+// forlocal;
 app.use(cors());
 const port = 5000;
 
