@@ -6,21 +6,21 @@ require("dotenv").config(); // Ensure dotenv is required before accessing proces
 const app = express();
 app.use(express.json());
 //for vercel online
-app.use(
-  cors({
-    // "taskstracker.netlify.app" for netlfiy npm run build
-    // original : https://mern-frontend-lake.vercel.app
-    origin: [
-      "https://voting-frontend-delta.vercel.app",
-      "http://localhost:5000",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     // "taskstracker.netlify.app" for netlfiy npm run build
+//     // original : https://mern-frontend-lake.vercel.app
+//     origin: [
+//       "https://voting-frontend-delta.vercel.app",
+//       "http://localhost:5000",
+//     ],
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//     credentials: true,
+//   })
+// );
 
-//forlocal
-// app.use(cors())
+forlocal;
+app.use(cors());
 const port = 5000;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
