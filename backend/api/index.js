@@ -34,6 +34,6 @@ app.post("/api/send-email", (req, res) => {
     });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(process.env.port || port, () => {
+  console.log(`Server is listening on http://localhost:${process.env.port}`);
 });
