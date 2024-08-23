@@ -30,13 +30,17 @@ const Login = () => {
 
     try {
       // Send OTP to backend
-      const response = await fetch("http://localhost:5000/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, otp }),
-      });
+      // const response = await fetch("http://localhost:5000/api/send-email", {
+      const response = await fetch(
+        "https://voting-backend-delta.vercel.app/api/send-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, otp }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Email sending failed.");
