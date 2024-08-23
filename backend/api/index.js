@@ -6,25 +6,11 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "*", // Allow all origins (adjust as needed for security)
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 const port = 5000;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-app.options("/api/send-email", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.status(200).end();
-});
 
 app.post("/api/send-email", (req, res) => {
   const { email, otp } = req.body;
