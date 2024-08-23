@@ -6,12 +6,12 @@ require("dotenv").config(); // Ensure dotenv is required before accessing proces
 const app = express();
 app.use(express.json());
 
-// CORS configuration
+// Allow all origins
 app.use(
   cors({
-    origin: "https://voting-frontend-delta.vercel.app", // Allow only this origin
-    methods: ["GET", "POST", "OPTIONS"], // Allow GET, POST, and OPTIONS methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "OPTIONS"], // Allow specific methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
     credentials: true,
   })
 );
@@ -22,10 +22,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.options("/api/send-email", (req, res) => {
   // Handle preflight request
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://voting-frontend-delta.vercel.app"
-  );
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.status(200).end();
