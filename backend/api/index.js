@@ -5,28 +5,25 @@ const sgMail = require("@sendgrid/mail");
 require("dotenv").config(); // Ensure dotenv is required before accessing process.env
 const app = express();
 app.use(express.json());
-
-// Allow all origins
+//for vercel online
 app.use(
   cors({
-    origin: "*", // Allow all origins
-    methods: ["GET", "POST", "OPTIONS"], // Allow specific methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    // "taskstracker.netlify.app" for netlfiy npm run build
+    // original : https://mern-frontend-lake.vercel.app
+    origin: [
+      "https://voting-frontend-delta.vercel.app",
+      "http://localhost:5000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
 
+//forlocal
+// app.use(cors())
 const port = 5000;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-app.options("/api/send-email", (req, res) => {
-  // Handle preflight request
-  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.status(200).end();
-});
 
 app.post("/api/send-email", (req, res) => {
   const { email, otp } = req.body;
