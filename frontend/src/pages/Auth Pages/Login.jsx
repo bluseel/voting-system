@@ -6,8 +6,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const generateOtp = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Validate CNIC length
     if (cnic.replace(/-/g, "").length !== 13) {
       alert("CNIC must be exactly 13 digits.");
@@ -15,7 +20,33 @@ const Login = () => {
     }
     console.log("CNIC:", cnic);
     console.log("Email:", email);
-    navigate("/otp");
+    localStorage.setItem("cnic", cnic);
+    localStorage.setItem("email", email);
+
+    // Generate OTP
+    const otp = generateOtp();
+    console.log(otp);
+    localStorage.setItem("otp", otp);
+
+    try {
+      // Send OTP to backend
+      const response = await fetch("http://localhost:5000/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Email sending failed.");
+      }
+
+      console.log("Email sent");
+      navigate("/otp");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
   };
 
   const formatCnic = (value) => {
@@ -34,10 +65,10 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-[#262529] flex place-content-center items-center  min-h-screen text-white px-10">
+    <div className="bg-[#262529] flex place-content-center items-center min-h-screen text-white px-10">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col space-y-5  mx-auto p-4"
+        className="flex flex-col space-y-5 mx-auto p-4"
       >
         <div>
           <label
@@ -69,14 +100,14 @@ const Login = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className=" bg-black mt-1 flex  px-4  py-2  text-6xl w-full border-gray-300 rounded-md shadow-sm"
+            className="bg-black mt-1 flex px-4 py-2 text-6xl w-full border-gray-300 rounded-md shadow-sm"
             placeholder="yourmail@email.com"
             required
           />
         </div>
         <div>
           <button
-            onClick={handleSubmit}
+            type="submit"
             className="w-full mt-10 bg-[#1C7D37] text-white px-6 py-4 rounded"
           >
             <img src="/public/check.svg" alt="" className="h-10 w-full" />

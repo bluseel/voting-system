@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 const CandidateReg = () => {
   const navigate = useNavigate();
+  const cachedCnic = localStorage.getItem("cnic");
+  const cachedEmail = localStorage.getItem("email");
+  console.log(cachedCnic);
 
   const [formData, setFormData] = useState({
     fullName: "",
     dob: "",
-    cnic: "45837-82634929-8",
+    cnic: cachedCnic,
     address: "",
-    email: "youremail@gmail.com",
+    email: cachedEmail,
     party: "Democratic Party", // Default value
   });
 
@@ -31,7 +34,7 @@ const CandidateReg = () => {
     // Calculate the age based on the entered date of birth
     const today = new Date();
     const birthDate = new Date(formData.dob);
-    const age = today.getFullYear() - birthDate.getFullYear();
+    age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
 
     // Adjust age if the birth date has not occurred this year yet

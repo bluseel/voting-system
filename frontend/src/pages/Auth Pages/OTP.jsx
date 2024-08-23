@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const OTP = () => {
   const [otp, setOTP] = useState("");
+  const [correctOTP, setCorrectOTP] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedOTP = localStorage.getItem("otp");
+    if (storedOTP) {
+      setCorrectOTP(storedOTP);
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validate OTP length
     if (otp.length !== 6) {
-      alert("OTP must be exactly 6 digits.");
+      setError("OTP must be exactly 6 digits.");
       return;
     }
-    console.log("OTP:", otp);
+
+    if (otp !== correctOTP) {
+      setError("Incorrect OTP. Please try again.");
+      return;
+    }
+
+    setError(""); // Clear error if OTP is correct
     navigate("/registration");
-    // Proceed with the next steps, e.g., verification
   };
 
   const handleChange = (e) => {
     const { value } = e.target;
-    // Allow only digits and limit to 6 characters
     const formattedValue = value.replace(/\D/g, "").slice(0, 6);
     setOTP(formattedValue);
   };
@@ -47,6 +59,7 @@ const OTP = () => {
             placeholder="XXXXXX"
             required
           />
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
 
         <div>
@@ -54,7 +67,7 @@ const OTP = () => {
             type="submit"
             className="w-full mt-10 bg-[#1C7D37] text-white px-6 py-4 rounded"
           >
-            <img src="/public/check.svg" alt="" className="h-10 w-full" />
+            <img src="/public/check.svg" alt="Check" className="h-10 w-full" />
           </button>
         </div>
       </form>
