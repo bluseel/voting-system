@@ -1,8 +1,8 @@
-require("dotenv").config(); // Ensure dotenv is required before accessing process.env
 const express = require("express");
 const cors = require("cors");
 const sgMail = require("@sendgrid/mail");
 
+require("dotenv").config(); // Ensure dotenv is required before accessing process.env
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -10,7 +10,6 @@ app.use(express.json());
 const port = 5000;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-console.log("SendGrid API Key:", process.env.SENDGRID_API_KEY);
 
 app.post("/api/send-email", (req, res) => {
   const { email, otp } = req.body;
