@@ -38,11 +38,8 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-// commented so vercel can start on its own
-// app.listen(process.env.port || port, () => {
-//   console.log(
-//     `Server is listening on http://localhost:${process.env.port || port}`
-//   );
-// });
-
-module.exports = app;
+app.listen(process.env.port || port, () => {
+  console.log(
+    `Server is listening on http://localhost:${process.env.port || port}`
+  );
+});
