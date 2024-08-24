@@ -43,3 +43,5 @@ app.listen(process.env.port || port, () => {
     `Server is listening on http://localhost:${process.env.port || port}`
   );
 });
+
+module.exports = app;
