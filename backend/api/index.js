@@ -1,9 +1,9 @@
 const express = require("express");
+const app = express();
 const cors = require("cors");
 const sgMail = require("@sendgrid/mail");
 
 require("dotenv").config();
-const app = express();
 app.use(express.json());
 
 app.use(cors());
@@ -38,10 +38,11 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.listen(process.env.port || port, () => {
-  console.log(
-    `Server is listening on http://localhost:${process.env.port || port}`
-  );
-});
+// commented so vercel can start on its own
+// app.listen(process.env.port || port, () => {
+//   console.log(
+//     `Server is listening on http://localhost:${process.env.port || port}`
+//   );
+// });
 
 module.exports = app;
