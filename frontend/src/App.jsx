@@ -10,6 +10,9 @@ import ChoosingReg from "./pages/Registration Pages/ChoosingReg";
 import CandidateReg from "./pages/Registration Pages/CandidateReg";
 import VoterReg from "./pages/Registration Pages/VoterReg";
 import Success from "./pages/Auth Pages/Success";
+import SelectParty from "./pages/Voting Pages/SelectParty";
+import ConfirmParty from "./pages/Voting Pages/ConfirmParty";
+import SuccessVote from "./pages/Voting Pages/SuccessVote";
 
 function App() {
   return (
@@ -24,6 +27,12 @@ function App() {
           <Route path="/registration/candidate" element={<CandidateReg />} />
           <Route path="/registration/voter" element={<VoterReg />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/selectparty" element={<SelectParty />} />
+          <Route
+            path="/selectparty/:val/confirmparty"
+            element={<ConfirmParty />}
+          />
+          <Route path="/successvote" element={<SuccessVote />} />
         </Routes>
       </div>
     </Router>
