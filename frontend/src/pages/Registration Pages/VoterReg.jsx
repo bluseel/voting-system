@@ -22,7 +22,7 @@ const VoterReg = () => {
     // Calculate the age based on the entered date of birth
     const today = new Date();
     const birthDate = new Date(formData.dob);
-    age = today.getFullYear() - birthDate.getFullYear();
+    let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
 
     // Adjust age if the birth date has not occurred this year yet
