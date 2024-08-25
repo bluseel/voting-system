@@ -4,7 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import LangSelect from "./pages/LangSelect";
 import LiveResults from "./pages/LiveResults";
-import Login from "./pages/Auth Pages/Login";
+import Register from "./pages/Auth Pages/Register";
 import OTP from "./pages/Auth Pages/OTP";
 import ChoosingReg from "./pages/Registration Pages/ChoosingReg";
 import CandidateReg from "./pages/Registration Pages/CandidateReg";
@@ -26,7 +26,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LangSelect />} />
             <Route path="/live-results" element={<LiveResults />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/otp" element={<OTP />} />
             <Route path="/registration" element={<ChoosingReg />} />
             <Route path="/registration/candidate" element={<CandidateReg />} />

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePhase } from "../PhaseContext";
 
 const LiveResults = () => {
   const [parties, setParties] = useState([]);
   const navigate = useNavigate();
+
+  const { currentPhase } = usePhase();
+  console.log(currentPhase);
 
   useEffect(() => {
     const fetchParties = async () => {
@@ -53,7 +57,7 @@ const LiveResults = () => {
               <tr key={party.partyId} className="border">
                 <td className="py-2 px-4 border">
                   <img
-                    src={`http://localhost:5000/${party.imgUrl}`}
+                    src={party.imgUrl}
                     alt={party.name}
                     className="w-16 h-16 object-cover"
                   />

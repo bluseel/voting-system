@@ -11,6 +11,14 @@ export const PhaseProvider = ({ children }) => {
     results: "notStarted",
   });
 
+  // Determine the current phase
+  const getCurrentPhase = () => {
+    if (phases.registration === "inProgress") return "registration";
+    if (phases.voting === "inProgress") return "voting";
+    if (phases.results === "inProgress") return "results";
+    return "done";
+  };
+
   // Function to move to the next phase
   const nextPhase = () => {
     if (phases.registration === "inProgress") {
@@ -43,8 +51,13 @@ export const PhaseProvider = ({ children }) => {
     });
   };
 
+  // Get the current phase
+  const currentPhase = getCurrentPhase();
+
   return (
-    <PhaseContext.Provider value={{ phases, nextPhase, restartEverything }}>
+    <PhaseContext.Provider
+      value={{ currentPhase, nextPhase, restartEverything }}
+    >
       {children}
     </PhaseContext.Provider>
   );
