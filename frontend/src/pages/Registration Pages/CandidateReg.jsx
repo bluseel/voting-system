@@ -3,41 +3,36 @@ import { useNavigate } from "react-router-dom";
 
 const CandidateReg = () => {
   const navigate = useNavigate();
-  const cachedCnic = localStorage.getItem("cnic");
-  const cachedEmail = localStorage.getItem("email");
-  console.log(cachedCnic);
+  const cachedCnic = localStorage.getItem("cnic") || "45837-82634929-8";
+  const cachedEmail = localStorage.getItem("email") || "youremail@gmail.com";
 
   const [formData, setFormData] = useState({
+    cnic: cachedCnic,
+    email: cachedEmail,
+    partyId: 1,
     fullName: "",
     dob: "",
-    cnic: cachedCnic,
     address: "",
-    email: cachedEmail,
-    party: "Democratic Party", // Default value
   });
 
-  const partyOptions = [
-    "Democratic Party",
-    "Republican Party",
-    "Independent Party",
-    "Green Party",
-    "Libertarian Party",
-  ];
+  const partyOptions = [1, 2, 3, 4, 5];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Calculate the age based on the entered date of birth
     const today = new Date();
     const birthDate = new Date(formData.dob);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
 
-    // Adjust age if the birth date has not occurred this year yet
     if (
       monthDifference < 0 ||
       (monthDifference === 0 && today.getDate() < birthDate.getDate())
@@ -45,21 +40,43 @@ const CandidateReg = () => {
       age--;
     }
 
-    // Validate age is between 18 and 150
     if (age < 18 || age > 150) {
       alert("Age must be between 18 and 150 years.");
       return;
     }
 
-    // Handle form submission logic, such as sending data to the server
-    console.log(formData);
-    navigate("/success");
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/createcandidate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        navigate("/success");
+      } else {
+        const errorData = await response.json();
+        if (response.status === 410) {
+          alert(`Error: ${errorData.error}`);
+        } else {
+          alert(`Error: ${errorData.error}`);
+        }
+      }
+    } catch (error) {
+      alert("An error occurred while submitting the form. Please try again.");
+    }
   };
 
   return (
-    <div className="bg-[#262529] flex flex-col place-content-center items-center min-h-screen text-white px-40">
+    <div className="bg-[#262529] flex flex-col justify-center items-center min-h-screen text-white px-6 md:px-40">
       <h1 className="text-3xl mb-6">Candidate Registration</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
+        {/* Form fields remain the same */}
         <div className="mb-4">
           <label htmlFor="fullName" className="block mb-2">
             Full Name
@@ -133,9 +150,9 @@ const CandidateReg = () => {
             Party
           </label>
           <select
-            name="party"
+            name="partyId"
             id="party"
-            value={formData.party}
+            value={formData.partyId}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-[#3b3a42] text-white border border-gray-600 rounded-md"
             required

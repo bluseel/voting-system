@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 const fileUpload = require("express-fileupload");
 const imgur = require("imgur");
 const cors = require("cors");
+const Candidate = require("../models/CandidateModal");
 const Party = require("../models/PartyModal");
+const Voter = require("../models/VoterModal");
+const Voting = require("../models/VotingModal");
+
 const CreatePartyRoute = require("./routes/CreatePartyRoute");
 
 require("dotenv").config();
@@ -24,6 +28,80 @@ mongoose
   })
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+// Route to create a candidate
+app.post("/api/createcandidate", async (req, res) => {
+  const { cnic, fullName: fullname, dob, email, address, partyId } = req.body;
+
+  try {
+    // Check if the candidate already exists by CNIC
+    const existingCandidate = await Candidate.findOne({ cnic });
+    if (existingCandidate) {
+      return res
+        .status(410)
+        .json({ error: "Candidate already registered with this CNIC." });
+    }
+
+    // Create a new candidate instance
+    const newCandidate = new Candidate({
+      cnic,
+      email,
+      partyId,
+      fullname,
+      dob,
+      address,
+    });
+    console.log("Request Body:", newCandidate);
+
+    // Save the candidate to the database
+    const savedCandidate = await newCandidate.save();
+
+    console.log(savedCandidate);
+    res.status(201).json(savedCandidate);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creating candidate" });
+  }
+});
+
+// Route to create a voter
+app.post("/api/register-voter", async (req, res) => {
+  const { fullName, dob, cnic, address, email } = req.body;
+
+  // Check if the voter already exists by CNIC
+  const existingVoter = await Voter.findOne({ cnic });
+  if (existingVoter) {
+    return res
+      .status(410)
+      .json({ error: "Voter already registered with this CNIC." });
+  }
+
+  // Age validation
+  const birthDate = new Date(dob);
+  const age = new Date().getFullYear() - birthDate.getFullYear();
+  if (age < 18 || age > 110) {
+    return res
+      .status(400)
+      .json({ error: "Age must be between 18 and 110 years." });
+  }
+
+  const newVoter = new Voter({
+    fullName,
+    dob,
+    cnic,
+    address,
+    email,
+  });
+
+  console.log(newVoter);
+
+  try {
+    await newVoter.save();
+    res.status(201).json({ message: "Voter registered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to register voter" });
+  }
+});
 
 // Route to get all parties
 app.get("/api/parties", async (req, res) => {

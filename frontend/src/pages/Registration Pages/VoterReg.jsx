@@ -16,7 +16,7 @@ const VoterReg = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Calculate the age based on the entered date of birth
@@ -25,7 +25,6 @@ const VoterReg = () => {
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
 
-    // Adjust age if the birth date has not occurred this year yet
     if (
       monthDifference < 0 ||
       (monthDifference === 0 && today.getDate() < birthDate.getDate())
@@ -39,9 +38,26 @@ const VoterReg = () => {
       return;
     }
 
-    // Handle form submission logic, such as sending data to the server
-    console.log(formData);
-    navigate("/success");
+    try {
+      const response = await fetch("http://localhost:5000/api/register-voter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error);
+      } else {
+        console.log("Voter registered successfully");
+        navigate("/success");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while registering the voter.");
+    }
   };
 
   return (

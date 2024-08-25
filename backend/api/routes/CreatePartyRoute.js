@@ -85,7 +85,6 @@ router.post("/create-party", async (req, res) => {
     await newParty.save();
     res.status(201).json({ message: "Party created successfully", partyId });
   } catch (error) {
-    console.error("Error creating party:", error);
     res.status(500).json({ error: "Error creating party" });
   }
 });

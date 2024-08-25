@@ -24,7 +24,11 @@ const LiveResults = () => {
   }, []);
 
   const handleSubmit = () => {
-    navigate("/login");
+    {
+      currentPhase === "registration"
+        ? navigate("/register")
+        : navigate("/login");
+    }
   };
 
   // Example votes data (for sorting purposes)

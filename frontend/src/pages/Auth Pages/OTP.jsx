@@ -1,3 +1,4 @@
+import { usePhase } from "../../PhaseContext";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +7,8 @@ const OTP = () => {
   const [correctOTP, setCorrectOTP] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const { currentPhase } = usePhase();
 
   useEffect(() => {
     const storedOTP = localStorage.getItem("otp");
@@ -27,8 +30,13 @@ const OTP = () => {
     }
 
     setError(""); // Clear error if OTP is correct
-    // navigate("/registration");
-    navigate("/selectparty");
+    {
+      currentPhase === "registration"
+        ? navigate("/registration")
+        : navigate("/selectparty");
+      // registration for new signup
+      // select party for voters
+    }
   };
 
   const handleChange = (e) => {
