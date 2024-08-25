@@ -14,26 +14,34 @@ import SelectParty from "./pages/Voting Pages/SelectParty";
 import ConfirmParty from "./pages/Voting Pages/ConfirmParty";
 import SuccessVote from "./pages/Voting Pages/SuccessVote";
 
+import AdminConsole from "./pages/Admin Page/AdminConsole";
+import { PhaseProvider } from "./PhaseContext";
+import CreateParty from "./pages/Admin Page/CreateParty";
+
 function App() {
   return (
     <Router>
       <div>
-        <Routes>
-          <Route path="/" element={<LangSelect />} />
-          <Route path="/live-results" element={<LiveResults />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/otp" element={<OTP />} />
-          <Route path="/registration" element={<ChoosingReg />} />
-          <Route path="/registration/candidate" element={<CandidateReg />} />
-          <Route path="/registration/voter" element={<VoterReg />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/selectparty" element={<SelectParty />} />
-          <Route
-            path="/selectparty/:val/confirmparty"
-            element={<ConfirmParty />}
-          />
-          <Route path="/successvote" element={<SuccessVote />} />
-        </Routes>
+        <PhaseProvider>
+          <Routes>
+            <Route path="/" element={<LangSelect />} />
+            <Route path="/live-results" element={<LiveResults />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/otp" element={<OTP />} />
+            <Route path="/registration" element={<ChoosingReg />} />
+            <Route path="/registration/candidate" element={<CandidateReg />} />
+            <Route path="/registration/voter" element={<VoterReg />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/selectparty" element={<SelectParty />} />
+            <Route
+              path="/selectparty/:val/confirmparty"
+              element={<ConfirmParty />}
+            />
+            <Route path="/successvote" element={<SuccessVote />} />
+            <Route path="/admin" element={<AdminConsole />} />
+            <Route path="/createnewparty" element={<CreateParty />} />
+          </Routes>
+        </PhaseProvider>
       </div>
     </Router>
   );

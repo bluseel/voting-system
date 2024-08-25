@@ -72,7 +72,7 @@ const LangSelect = () => {
         onClick={handleSubmit}
         className="mt-10 bg-[#1C7D37] text-white px-6 py-4 rounded"
       >
-        <img src="/public/check.svg" alt="" className="h-10 w-full" />
+        <img src="/check.svg" alt="" className="h-10 w-full" />
       </button>
     </div>
   );
