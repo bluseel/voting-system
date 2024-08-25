@@ -40,6 +40,7 @@ const AdminConsole = () => {
 
   useEffect(() => {
     updatePhaseClass();
+    console.log(currentPhase);
   }, [currentPhase]);
 
   return (

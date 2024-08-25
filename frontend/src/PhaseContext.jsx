@@ -1,15 +1,26 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 // Create the context
 const PhaseContext = createContext();
 
 // Create a provider component
 export const PhaseProvider = ({ children }) => {
-  const [phases, setPhases] = useState({
-    registration: "inProgress",
-    voting: "notStarted",
-    results: "notStarted",
+  const [phases, setPhases] = useState(() => {
+    // Retrieve the phases from localStorage or set default values
+    const savedPhases = localStorage.getItem("phases");
+    return savedPhases
+      ? JSON.parse(savedPhases)
+      : {
+          registration: "inProgress",
+          voting: "notStarted",
+          results: "notStarted",
+        };
   });
+
+  useEffect(() => {
+    // Save phases to localStorage whenever they change
+    localStorage.setItem("phases", JSON.stringify(phases));
+  }, [phases]);
 
   // Determine the current phase
   const getCurrentPhase = () => {

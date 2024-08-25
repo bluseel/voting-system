@@ -40,45 +40,67 @@ const LiveResults = () => {
     .reverse();
 
   return (
-    <div className="bg-[#262529] min-h-screen text-white px-10">
-      <div className="text-5xl mb-6 text-center py-5">NA-209 Live Results</div>
-      <div>
-        {/* table */}
-        <table className="min-w-full border">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border text-start w-[100px]">Logo</th>
-              <th className="py-2 px-4 border text-start">Party Name</th>
-              <th className="py-2 px-4 border text-start w-[100px]">Votes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedParties.map((party) => (
-              <tr key={party.partyId} className="border">
-                <td className="py-2 px-4 border">
-                  <img
-                    src={party.imgUrl}
-                    alt={party.name}
-                    className="w-16 h-16 object-cover"
-                  />
-                </td>
-                <td className="py-2 px-4 border">{party.name}</td>
-                <td className="py-2 px-4 border">{votes[party.name] || 0}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* buttons */}
-        <div>
-          <button
-            className="bg-[#1C7D37] px-5 py-2 mt-2 w-full font-bold"
-            onClick={handleSubmit}
-          >
-            Caste Vote
-          </button>
+    <div className="bg-[#262529] min-h-screen text-center text-white px-10">
+      {currentPhase === "done" ? (
+        <div className="min-h-screen  text-5xl w-full flex place-content-center items-center">
+          The system in offline. <br /> Contact Polling Agent
         </div>
-      </div>
+      ) : (
+        <div className="bg-[#262529] min-h-screen text-white px-10">
+          <div className="text-5xl mb-6 text-center py-5">
+            NA-209 Live Results
+          </div>
+          <div>
+            {/* table */}
+            <table className="min-w-full border">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border text-start w-[100px]">
+                    Logo
+                  </th>
+                  <th className="py-2 px-4 border text-start">Party Name</th>
+                  <th className="py-2 px-4 border text-start w-[100px]">
+                    Votes
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedParties.map((party) => (
+                  <tr key={party.partyId} className="border">
+                    <td className="py-2 px-4 border">
+                      <img
+                        src={party.imgUrl}
+                        alt={party.name}
+                        className="w-16 h-16 object-cover"
+                      />
+                    </td>
+                    <td className="py-2 px-4 border">{party.name}</td>
+                    <td className="py-2 px-4 border">
+                      {votes[party.name] || 0}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* buttons */}
+            <div>
+              {currentPhase === ("results" || "done") ? (
+                "The final results are in"
+              ) : (
+                <button
+                  className="bg-[#1C7D37] px-5 py-2 mt-2 w-full font-bold"
+                  onClick={handleSubmit}
+                >
+                  {currentPhase === "registration"
+                    ? "Register Now"
+                    : "Caste Your Vote"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
