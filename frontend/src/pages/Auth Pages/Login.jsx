@@ -40,6 +40,10 @@ const Login = () => {
       });
 
       const dataEmail = await responseEmail.json();
+      if (responseEmail.status === 420) {
+        alert("CNIC not registered");
+        throw new Error("Email Not Found");
+      }
       if (!responseEmail.ok || !dataEmail.email) {
         throw new Error("Failed to fetch email.");
       }

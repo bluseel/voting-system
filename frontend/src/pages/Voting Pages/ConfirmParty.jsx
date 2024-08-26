@@ -6,21 +6,43 @@ const ConfirmParty = () => {
   const location = useLocation();
   const { party } = location.state || {}; // Get the party data from the state
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const cnicVoter = localStorage.getItem("cnicVoter");
 
     // Get current date and time
     const now = new Date();
-    const todayDate = now.toLocaleDateString(); // Formats to "MM/DD/YYYY" or similar
-    const todayTime = now.toLocaleTimeString(); // Formats to "HH:MM:SS AM/PM" or similar
+    const dateTimeOfVote = now.toISOString(); // Formats to ISO 8601 string (e.g., "2024-08-26T12:00:00Z")
 
-    // Create the log message
-    const logMessage = `<${cnicVoter}> voted for <${party.name}> on <${todayDate}> at <${todayTime}>`;
+    try {
+      // Send POST request to register the vote
+      const response = await fetch(
+        `${process.env.APIURL}/api/register-voting`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cnicVoter,
+            partyId: party.partyId, // Assuming party._id is the identifier for the party
+            dateTimeOfVote,
+          }),
+        }
+      );
 
-    // Console log the message
-    console.log(logMessage);
+      const result = await response.json();
 
-    navigate(`/successvote`);
+      if (response.ok) {
+        console.log("Vote registered successfully:", result);
+        navigate(`/successvote`);
+      } else {
+        console.error("Failed to register vote:", result.error);
+        // Optionally, show an error message to the user
+      }
+    } catch (error) {
+      console.error("Error registering vote:", error);
+      // Optionally, show an error message to the user
+    }
   };
 
   const handleClose = () => {

@@ -4,10 +4,10 @@ import { usePhase } from "../PhaseContext";
 
 const LiveResults = () => {
   const [parties, setParties] = useState([]);
+  const [votes, setVotes] = useState({});
   const navigate = useNavigate();
 
   const { currentPhase } = usePhase();
-  console.log(currentPhase);
 
   useEffect(() => {
     const fetchParties = async () => {
@@ -20,34 +20,40 @@ const LiveResults = () => {
       }
     };
 
+    const fetchVotes = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/live-votes");
+        const data = await response.json();
+        const voteMap = data.reduce((map, party) => {
+          map[party.partyId] = party.voteCount;
+          return map;
+        }, {});
+        setVotes(voteMap);
+      } catch (error) {
+        console.error("Error fetching live votes:", error);
+      }
+    };
+
     fetchParties();
+    fetchVotes();
   }, []);
 
   const handleSubmit = () => {
-    {
-      currentPhase === "registration"
-        ? navigate("/register")
-        : navigate("/login");
-    }
-  };
-
-  // Example votes data (for sorting purposes)
-  const votes = {
-    "Party A": 120,
-    "Party B": 95,
-    "Party C": 75,
+    currentPhase === "registration"
+      ? navigate("/register")
+      : navigate("/login");
   };
 
   // Sort parties by votes in descending order
   const sortedParties = [...parties]
-    .sort((a, b) => (votes[a.name] || 0) - (votes[b.name] || 0))
+    .sort((a, b) => (votes[a.partyId] || 0) - (votes[b.partyId] || 0))
     .reverse();
 
   return (
     <div className="bg-[#262529] min-h-screen text-center text-white px-10">
       {currentPhase === "done" ? (
-        <div className="min-h-screen  text-5xl w-full flex place-content-center items-center">
-          The system in offline. <br /> Contact Polling Agent
+        <div className="min-h-screen text-5xl w-full flex place-content-center items-center">
+          The system is offline. <br /> Contact Polling Agent
         </div>
       ) : (
         <div className="bg-[#262529] min-h-screen text-white px-10">
@@ -80,7 +86,7 @@ const LiveResults = () => {
                     </td>
                     <td className="py-2 px-4 border">{party.name}</td>
                     <td className="py-2 px-4 border">
-                      {votes[party.name] || 0}
+                      {votes[party.partyId] || 0}
                     </td>
                   </tr>
                 ))}
@@ -89,7 +95,7 @@ const LiveResults = () => {
 
             {/* buttons */}
             <div>
-              {currentPhase === ("results" || "done") ? (
+              {currentPhase === "results" || currentPhase === "done" ? (
                 "The final results are in"
               ) : (
                 <button
@@ -98,7 +104,7 @@ const LiveResults = () => {
                 >
                   {currentPhase === "registration"
                     ? "Register Now"
-                    : "Caste Your Vote"}
+                    : "Cast Your Vote"}
                 </button>
               )}
             </div>

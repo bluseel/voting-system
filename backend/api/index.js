@@ -12,6 +12,8 @@ const Voting = require("../models/VotingModal");
 const CreatePartyRoute = require("./routes/CreatePartyRoute");
 const DuplicationCheckRoute = require("./routes/DuplicationRoute");
 const GetEmailRoute = require("./routes/GetEmailRoute");
+const VotingRoute = require("./routes/VotingRoute");
+const PartyVotesRoute = require("./routes/PartyVotesRoute");
 
 require("dotenv").config();
 
@@ -24,6 +26,8 @@ app.use(fileUpload()); // Ensure this middleware is used
 app.use("/api", CreatePartyRoute); //api routes
 app.use("/api/", DuplicationCheckRoute); //api routes
 app.use("/api/", GetEmailRoute); //api routes
+app.use("/api/", VotingRoute); //api routes
+app.use("/api/", PartyVotesRoute); //api routes
 
 // Connect to MongoDB
 mongoose
