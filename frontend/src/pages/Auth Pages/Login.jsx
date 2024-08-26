@@ -1,11 +1,13 @@
-import { Ellipsis } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+const Login = () => {
   const [cnic, setCnic] = useState("");
-  const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem("cnicVoter", cnic);
+  }, [cnic]);
 
   const url = process.env.APIURL;
 
@@ -23,39 +25,27 @@ const Register = () => {
     }
 
     console.log("CNIC:", cnic);
-    console.log("Email:", email);
     localStorage.setItem("cnic", cnic);
-    localStorage.setItem("email", email);
 
-    let duplicatedCNCI = false;
+    let email = "";
+
     try {
-      const responseDuplication = await fetch(`${url}/api/duplication-check`, {
+      // Fetch email using CNIC
+      const responseEmail = await fetch(`${url}/api/get-email/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cnic, email }),
+        body: JSON.stringify({ cnic }),
       });
 
-      // Debugging the response
-      const data = await responseDuplication.json();
-      console.log("Response from duplication check:", data);
-
-      if (!responseDuplication.ok) {
-        duplicatedCNCI = true;
-        alert(data.error); // Show alert with error message
-      } else {
-        console.log("Unique CNIC, proceeding with OTP generation.");
+      const dataEmail = await responseEmail.json();
+      if (!responseEmail.ok || !dataEmail.email) {
+        throw new Error("Failed to fetch email.");
       }
-    } catch (error) {
-      console.log("dup erro:", error);
-    }
 
-    try {
-      // Check for duplication first
-      if (duplicatedCNCI) {
-        throw new Error("Duplication in cnic");
-      }
+      email = dataEmail.email;
+      console.log("Fetched Email:", email);
 
       // Generate OTP
       const otp = generateOtp();
@@ -81,7 +71,7 @@ const Register = () => {
       console.log("Email sent successfully.");
       navigate("/otp");
     } catch (error) {
-      console.error("Error during registration process:", error);
+      console.error("Error during the process:", error);
     }
   };
 
@@ -124,23 +114,6 @@ const Register = () => {
             required
           />
         </div>
-        <div className="mt-4">
-          <label
-            htmlFor="email"
-            className="block font-medium text-5xl leading-normal"
-          >
-            Enter your Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-black mt-1 flex px-4 py-2 text-6xl w-full border-gray-300 rounded-md shadow-sm"
-            placeholder="yourmail@email.com"
-            required
-          />
-        </div>
         <div>
           <button
             type="submit"
@@ -154,4 +127,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

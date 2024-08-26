@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
@@ -6,7 +6,20 @@ import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 const SelectParty = () => {
   const [selectedOption, setSelectedOption] = useState(""); // Initially empty to capture the user's selection
   const [error, setError] = useState(""); // State for handling errors
+  const [parties, setParties] = useState([]); // State to store parties data
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`${process.env.APIURL}/api/parties`)
+      .then((response) => response.json())
+      .then((data) => {
+        setParties(data); // Update state with the fetched parties data
+      })
+      .catch((err) => {
+        console.error("Failed to fetch parties:", err);
+        setError("Failed to load parties. Please try again later.");
+      });
+  }, []);
 
   const handleOptionChange = (value) => {
     setSelectedOption(value); // Updates the selectedOption state with the selected value
@@ -15,7 +28,15 @@ const SelectParty = () => {
 
   const handleSubmit = () => {
     if (selectedOption) {
-      navigate(`/selectparty/${selectedOption}/confirmparty`); // Navigate to a different page based on the selected option
+      // Find the selected party from the parties array
+      const selectedParty = parties.find(
+        (party) => party.partyId.toString() === selectedOption
+      );
+
+      // Navigate to ConfirmParty with the selected party as state
+      navigate("/selectparty/confirmparty", {
+        state: { party: selectedParty },
+      });
     } else {
       setError("Please select a party before proceeding."); // Set error message if no party is selected
     }
@@ -30,24 +51,28 @@ const SelectParty = () => {
         onValueChange={handleOptionChange}
         className="w-full grid grid-cols-2"
       >
-        {[1, 2, 3, 4, 6, 7].map((item) => (
+        {parties.map((party) => (
           <Label
-            key={item}
-            htmlFor={item.toString()} // Ensure the id is a string
-            className="w-full flex flex-row-reverse items-center space-x-2 bg-[#2681BA] h-16 place-content-end py-14 cursor-pointer px-10"
+            key={party.partyId}
+            htmlFor={party.partyId.toString()} // Ensure the id is a string
+            className="w-full flex gap-6 flex-row-reverse items-center bg-[#2681BA] h-16 place-content-end py-14 cursor-pointer px-10"
           >
-            <div className="relative ">
+            <div className="relative">
               <RadioGroupItem
-                value={item.toString()} // Bind the value to the actual item number as a string
-                id={item.toString()} // Ensure the id is a string
-                className="scale-[2] absolute -top-1 -left-5 "
+                value={party.partyId.toString()} // Bind the value to the partyId as a string
+                id={party.partyId.toString()} // Ensure the id is a string
+                className="scale-[2] absolute -top-1 -left-2"
+              />
+            </div>
+            <div className="h-20 w-24 aspect-auto bg-white p-1">
+              <img
+                src={party.imgUrl}
+                alt={`${party.name} logo`}
+                className="w-full h-full"
               />
             </div>
             <div>
-              <div className="text-2xl pr-10">(PPP) Pakistan Peoples Party</div>
-            </div>
-            <div className="h-20 w-24 aspect-auto bg-white p-2">
-              <img src="/ppp.png" alt="Party logo" className="w-full h-full" />
+              <div className="text-2xl">{party.name}</div>
             </div>
           </Label>
         ))}

@@ -5,6 +5,7 @@ import "./App.css";
 import LangSelect from "./pages/LangSelect";
 import LiveResults from "./pages/LiveResults";
 import Register from "./pages/Auth Pages/Register";
+import Login from "./pages/Auth Pages/Login";
 import OTP from "./pages/Auth Pages/OTP";
 import ChoosingReg from "./pages/Registration Pages/ChoosingReg";
 import CandidateReg from "./pages/Registration Pages/CandidateReg";
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<LangSelect />} />
             <Route path="/live-results" element={<LiveResults />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/otp" element={<OTP />} />
             <Route path="/registration" element={<ChoosingReg />} />
             <Route path="/registration/candidate" element={<CandidateReg />} />
@@ -34,7 +36,7 @@ function App() {
             <Route path="/success" element={<Success />} />
             <Route path="/selectparty" element={<SelectParty />} />
             <Route
-              path="/selectparty/:val/confirmparty"
+              path="/selectparty/confirmparty"
               element={<ConfirmParty />}
             />
             <Route path="/successvote" element={<SuccessVote />} />

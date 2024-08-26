@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const votingSchema = new mongoose.Schema({
   cnicVoter: { type: String, required: true, ref: "Voter" },
-  cnicCandidate: { type: String, required: true, ref: "Candidate" },
   partyId: { type: mongoose.Schema.Types.String, ref: "Party", required: true },
   dateTimeOfVote: { type: Date, required: true, default: Date.now },
 });
