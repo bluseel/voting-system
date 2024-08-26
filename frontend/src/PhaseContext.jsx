@@ -60,7 +60,7 @@ export const PhaseProvider = ({ children }) => {
   const restartEverything = async () => {
     try {
       const responseClearDB = await fetch(`${apiURL}/api/reset-everything/`, {
-        method: "POST",
+        method: "GET",
       });
 
       const data = await responseClearDB.json();

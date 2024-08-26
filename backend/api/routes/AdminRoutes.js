@@ -7,7 +7,7 @@ const Voting = require("../../models/VotingModal");
 const Admin = require("../../models/AdminModal");
 
 // Route to delete all records in each collection
-router.post("/reset-everything", async (req, res) => {
+router.get("/reset-everything", async (req, res) => {
   try {
     await Candidate.deleteMany({});
 
