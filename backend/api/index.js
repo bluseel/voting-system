@@ -14,6 +14,7 @@ const DuplicationCheckRoute = require("./routes/DuplicationRoute");
 const GetEmailRoute = require("./routes/GetEmailRoute");
 const VotingRoute = require("./routes/VotingRoute");
 const PartyVotesRoute = require("./routes/PartyVotesRoute");
+const AdminRoutes = require("./routes/AdminRoutes");
 
 require("dotenv").config();
 
@@ -28,6 +29,7 @@ app.use("/api/", DuplicationCheckRoute); //api routes
 app.use("/api/", GetEmailRoute); //api routes
 app.use("/api/", VotingRoute); //api routes
 app.use("/api/", PartyVotesRoute); //api routes
+app.use("/api/", AdminRoutes); //api routes
 
 // Connect to MongoDB
 mongoose

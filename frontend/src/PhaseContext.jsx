@@ -54,7 +54,21 @@ export const PhaseProvider = ({ children }) => {
   };
 
   // Function to restart everything
-  const restartEverything = () => {
+  const restartEverything = async () => {
+    try {
+      const reponseClearDB = await fetch(
+        `${process.env.APIURL}/api/reset-everything/`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await reponseClearDB.json();
+      console.log(data.message);
+    } catch (error) {
+      console.log("Error Deleteing: ", error);
+    }
+
     setPhases({
       registration: "inProgress",
       voting: "notStarted",
@@ -64,6 +78,29 @@ export const PhaseProvider = ({ children }) => {
 
   // Get the current phase
   const currentPhase = getCurrentPhase();
+  useEffect(() => {
+    const updatePhase = async () => {
+      try {
+        const responseClearDB = await fetch(
+          `${process.env.APIURL}/api/update-phase/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ newPhase: currentPhase }), // Send the newPhase in the body
+          }
+        );
+
+        const data = await responseClearDB.json();
+        console.log(data.message);
+      } catch (error) {
+        console.log("Error Updating Phase: ", error);
+      }
+    };
+
+    updatePhase();
+  }, [currentPhase]);
 
   return (
     <PhaseContext.Provider

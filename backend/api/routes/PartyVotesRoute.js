@@ -19,7 +19,6 @@ router.get("/live-votes", async (req, res) => {
         },
       },
     ]);
-    console.log("meiiiiiiiiiiiiiooooooooooooow:", votes);
 
     // Step 3: Create a map of partyID to party details
     const partyMap = parties.reduce((map, party) => {
