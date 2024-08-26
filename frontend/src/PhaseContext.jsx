@@ -45,6 +45,8 @@ export const PhaseProvider = ({ children }) => {
       newPhase = "results";
     } else if (currentPhase === "results") {
       newPhase = "done";
+    } else if (currentPhase === "done") {
+      newPhase = "registration"; // Restart cycle
     }
 
     setCurrentPhase(newPhase);
