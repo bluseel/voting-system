@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePhase } from "../PhaseContext";
+import apiURL from "../../envfile";
 
 const LiveResults = () => {
   const [parties, setParties] = useState([]);
@@ -12,7 +13,7 @@ const LiveResults = () => {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/parties");
+        const response = await fetch(`${apiURL}/api/parties`);
         const data = await response.json();
         setParties(data);
       } catch (error) {
@@ -22,7 +23,7 @@ const LiveResults = () => {
 
     const fetchVotes = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/live-votes");
+        const response = await fetch(`${apiURL}/api/live-votes`);
         const data = await response.json();
         const voteMap = data.reduce((map, party) => {
           map[party.partyId] = party.voteCount;

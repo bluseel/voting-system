@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import apiURL from "../../../envfile";
 
 const CandidateReg = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const CandidateReg = () => {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/parties");
+        const response = await fetch(`${apiURL}/api/parties`);
         if (!response.ok) {
           throw new Error("Failed to fetch parties");
         }
@@ -63,16 +64,13 @@ const CandidateReg = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/createcandidate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${apiURL}api/createcandidate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       if (response.ok) {
         navigate("/success");

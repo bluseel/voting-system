@@ -1,3 +1,4 @@
+import apiURL from "../../../envfile";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -30,13 +31,10 @@ const CreateParty = () => {
 
     try {
       // Upload logo
-      const uploadResponse = await fetch(
-        "http://localhost:5000/api/upload-logo",
-        {
-          method: "POST",
-          body: formDataToSend,
-        }
-      );
+      const uploadResponse = await fetch(`${apiURL}/api/upload-logo`, {
+        method: "POST",
+        body: formDataToSend,
+      });
 
       if (!uploadResponse.ok) {
         throw new Error("Failed to upload logo");
@@ -51,16 +49,13 @@ const CreateParty = () => {
         logoUrl: logoUrl,
       };
 
-      const partyResponse = await fetch(
-        "http://localhost:5000/api/create-party",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(partyData),
-        }
-      );
+      const partyResponse = await fetch(`${apiURL}/api/create-party`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(partyData),
+      });
 
       if (!partyResponse.ok) {
         throw new Error("Failed to create party");

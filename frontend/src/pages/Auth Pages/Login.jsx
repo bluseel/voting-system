@@ -1,3 +1,4 @@
+import apiURL from "../../../envfile";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +10,7 @@ const Login = () => {
     localStorage.setItem("cnicVoter", cnic);
   }, [cnic]);
 
-  const url = process.env.APIURL;
+  const url = apiURL;
 
   const generateOtp = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();

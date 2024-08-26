@@ -1,3 +1,4 @@
+import apiURL from "../../../envfile";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -42,7 +43,7 @@ const VoterReg = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/register-voter", {
+      const response = await fetch(`${apiURL}/api/register-voter`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

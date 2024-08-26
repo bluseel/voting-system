@@ -32,11 +32,10 @@ app.use("/api/", PartyVotesRoute); //api routes
 app.use("/api/", AdminRoutes); //api routes
 
 // Connect to MongoDB
+
 mongoose
-  .connect("mongodb://localhost:27017/voting", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  // .connect("mongodb://localhost:27017/voting", {
+  .connect(process.env.MONGODB_URI, {})
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
+import apiURL from "../../../envfile";
 
 const SelectParty = () => {
   const [selectedOption, setSelectedOption] = useState(""); // Initially empty to capture the user's selection
@@ -10,7 +11,7 @@ const SelectParty = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${process.env.APIURL}/api/parties`)
+    fetch(`${apiURL}/api/parties`)
       .then((response) => response.json())
       .then((data) => {
         setParties(data); // Update state with the fetched parties data

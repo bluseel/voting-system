@@ -1,4 +1,4 @@
-import { Ellipsis } from "lucide-react";
+import apiURL from "../../../envfile";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const url = process.env.APIURL;
+  const url = apiURL;
 
   const generateOtp = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();

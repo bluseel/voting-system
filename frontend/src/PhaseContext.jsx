@@ -1,3 +1,4 @@
+import apiURL from "../envfile";
 import React, { createContext, useState, useContext, useEffect } from "react";
 
 // Create the context
@@ -16,6 +17,8 @@ export const PhaseProvider = ({ children }) => {
           results: "notStarted",
         };
   });
+
+  const [currentPhaseFromDB, setCurrentPhaseFromDB] = useState("registration");
 
   useEffect(() => {
     // Save phases to localStorage whenever they change
@@ -56,17 +59,14 @@ export const PhaseProvider = ({ children }) => {
   // Function to restart everything
   const restartEverything = async () => {
     try {
-      const reponseClearDB = await fetch(
-        `${process.env.APIURL}/api/reset-everything/`,
-        {
-          method: "POST",
-        }
-      );
+      const responseClearDB = await fetch(`${apiURL}/api/reset-everything/`, {
+        method: "POST",
+      });
 
-      const data = await reponseClearDB.json();
+      const data = await responseClearDB.json();
       console.log(data.message);
     } catch (error) {
-      console.log("Error Deleteing: ", error);
+      console.log("Error Deleting: ", error);
     }
 
     setPhases({
@@ -76,35 +76,46 @@ export const PhaseProvider = ({ children }) => {
     });
   };
 
-  // Get the current phase
+  // Update phase and get current phase from DB
   const currentPhase = getCurrentPhase();
+
   useEffect(() => {
     const updatePhase = async () => {
       try {
-        const responseClearDB = await fetch(
-          `${process.env.APIURL}/api/update-phase/`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ newPhase: currentPhase }), // Send the newPhase in the body
-          }
-        );
+        const response = await fetch(`${apiURL}/api/update-phase/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newPhase: currentPhase }), // Send the newPhase in the body
+        });
 
-        const data = await responseClearDB.json();
+        const data = await response.json();
         console.log(data.message);
       } catch (error) {
         console.log("Error Updating Phase: ", error);
       }
     };
 
+    const updateCurrentPhaseFromDB = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.APIURL}/api/current-phase/`
+        );
+        const dbPhase = await response.json();
+        setCurrentPhaseFromDB(dbPhase.currentPhase); // Assuming dbPhase has a 'currentPhase' property
+      } catch (error) {
+        console.log("Error Fetching Current Phase: ", error);
+      }
+    };
+
     updatePhase();
+    updateCurrentPhaseFromDB();
   }, [currentPhase]);
 
   return (
     <PhaseContext.Provider
-      value={{ currentPhase, nextPhase, restartEverything }}
+      value={{ currentPhase: currentPhaseFromDB, nextPhase, restartEverything }}
     >
       {children}
     </PhaseContext.Provider>

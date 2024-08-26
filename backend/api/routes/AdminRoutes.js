@@ -65,4 +65,25 @@ router.post("/update-phase", async (req, res) => {
       .send({ error: "An error occurred while updating the phase" });
   }
 });
+
+// Route to get the currentPhase of the admin named "fida"
+router.get("/current-phase", async (req, res) => {
+  try {
+    const admin = await Admin.findOne({ adminName: "fida" });
+
+    if (!admin) {
+      return res
+        .status(404)
+        .send({ error: "Admin with name 'fida' not found" });
+    }
+
+    res.status(200).send({ currentPhase: admin.currentPhase });
+  } catch (error) {
+    console.error("Error fetching current phase:", error);
+    res
+      .status(500)
+      .send({ error: "An error occurred while fetching the current phase" });
+  }
+});
+
 module.exports = router;

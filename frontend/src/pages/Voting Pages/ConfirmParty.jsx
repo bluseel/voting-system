@@ -1,3 +1,4 @@
+import apiURL from "../../../envfile";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -15,20 +16,17 @@ const ConfirmParty = () => {
 
     try {
       // Send POST request to register the vote
-      const response = await fetch(
-        `${process.env.APIURL}/api/register-voting`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cnicVoter,
-            partyId: party.partyId, // Assuming party._id is the identifier for the party
-            dateTimeOfVote,
-          }),
-        }
-      );
+      const response = await fetch(`${apiURL}/api/register-voting`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cnicVoter,
+          partyId: party.partyId, // Assuming party._id is the identifier for the party
+          dateTimeOfVote,
+        }),
+      });
 
       const result = await response.json();
 
