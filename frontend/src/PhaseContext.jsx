@@ -1,59 +1,54 @@
-import apiURL from "../envfile";
 import React, { createContext, useState, useContext, useEffect } from "react";
+import apiURL from "../envfile";
 
 // Create the context
 const PhaseContext = createContext();
 
 // Create a provider component
 export const PhaseProvider = ({ children }) => {
-  const [phases, setPhases] = useState(() => {
-    // Retrieve the phases from localStorage or set default values
-    const savedPhases = localStorage.getItem("phases");
-    return savedPhases
-      ? JSON.parse(savedPhases)
-      : {
-          registration: "inProgress",
-          voting: "notStarted",
-          results: "notStarted",
-        };
-  });
+  const [currentPhase, setCurrentPhase] = useState("registration"); // Default phase
 
-  const [currentPhaseFromDB, setCurrentPhaseFromDB] = useState("registration");
+  // Function to fetch the current phase from the database
+  const fetchCurrentPhaseFromDB = async () => {
+    try {
+      const response = await fetch(`${apiURL}/api/current-phase/`);
+      const data = await response.json();
+      setCurrentPhase(data.currentPhase || "registration"); // Fallback to "registration" if no phase is returned
+    } catch (error) {
+      console.error("Error fetching current phase from DB:", error);
+    }
+  };
 
-  useEffect(() => {
-    // Save phases to localStorage whenever they change
-    localStorage.setItem("phases", JSON.stringify(phases));
-  }, [phases]);
-
-  // Determine the current phase
-  const getCurrentPhase = () => {
-    if (phases.registration === "inProgress") return "registration";
-    if (phases.voting === "inProgress") return "voting";
-    if (phases.results === "inProgress") return "results";
-    return "done";
+  // Function to update the current phase in the database
+  const updatePhaseInDB = async (newPhase) => {
+    try {
+      const response = await fetch(`${apiURL}/api/update-phase/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newPhase }),
+      });
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Error updating phase in DB:", error);
+    }
   };
 
   // Function to move to the next phase
   const nextPhase = () => {
-    if (phases.registration === "inProgress") {
-      setPhases({
-        registration: "done",
-        voting: "inProgress",
-        results: "notStarted",
-      });
-    } else if (phases.voting === "inProgress") {
-      setPhases({
-        registration: "done",
-        voting: "done",
-        results: "inProgress",
-      });
-    } else if (phases.results === "inProgress") {
-      setPhases({
-        registration: "done",
-        voting: "done",
-        results: "done",
-      });
+    let newPhase = currentPhase;
+    if (currentPhase === "registration") {
+      newPhase = "voting";
+    } else if (currentPhase === "voting") {
+      newPhase = "results";
+    } else if (currentPhase === "results") {
+      newPhase = "done";
     }
+
+    setCurrentPhase(newPhase);
+    updatePhaseInDB(newPhase); // Update the phase in the database
   };
 
   // Function to restart everything
@@ -62,60 +57,25 @@ export const PhaseProvider = ({ children }) => {
       const responseClearDB = await fetch(`${apiURL}/api/reset-everything/`, {
         method: "GET",
       });
-
       const data = await responseClearDB.json();
       console.log(data.message);
     } catch (error) {
-      console.log("Error Deleting: ", error);
+      console.error("Error resetting everything:", error);
     }
 
-    setPhases({
-      registration: "inProgress",
-      voting: "notStarted",
-      results: "notStarted",
-    });
+    const initialPhase = "registration";
+    setCurrentPhase(initialPhase);
+    updatePhaseInDB(initialPhase); // Reset the phase in the database
   };
 
-  // Update phase and get current phase from DB
-  const currentPhase = getCurrentPhase();
-
+  // Fetch the current phase from the database when the component mounts
   useEffect(() => {
-    const updatePhase = async () => {
-      try {
-        const response = await fetch(`${apiURL}/api/update-phase/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ newPhase: currentPhase }), // Send the newPhase in the body
-        });
-
-        const data = await response.json();
-        console.log(data.message);
-      } catch (error) {
-        console.log("Error Updating Phase: ", error);
-      }
-    };
-
-    const updateCurrentPhaseFromDB = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.APIURL}/api/current-phase/`
-        );
-        const dbPhase = await response.json();
-        setCurrentPhaseFromDB(dbPhase.currentPhase); // Assuming dbPhase has a 'currentPhase' property
-      } catch (error) {
-        console.log("Error Fetching Current Phase: ", error);
-      }
-    };
-
-    updatePhase();
-    updateCurrentPhaseFromDB();
-  }, [currentPhase]);
+    fetchCurrentPhaseFromDB();
+  }, []);
 
   return (
     <PhaseContext.Provider
-      value={{ currentPhase: currentPhaseFromDB, nextPhase, restartEverything }}
+      value={{ currentPhase, nextPhase, restartEverything }}
     >
       {children}
     </PhaseContext.Provider>
