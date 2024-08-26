@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 const VoterReg = () => {
   const navigate = useNavigate();
 
+  const cachedCnic = localStorage.getItem("cnic") || "45837-82634929-8";
+  const cachedEmail = localStorage.getItem("email") || "youremail@gmail.com";
+
   const [formData, setFormData] = useState({
     fullName: "",
     dob: "",
-    cnic: "45837-82634929-8",
+    cnic: cachedCnic,
     address: "",
-    email: "youremail@gmail.com",
+    email: cachedEmail,
   });
 
   const handleChange = (e) => {

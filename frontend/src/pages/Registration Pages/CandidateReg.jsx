@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CandidateReg = () => {
@@ -9,13 +9,30 @@ const CandidateReg = () => {
   const [formData, setFormData] = useState({
     cnic: cachedCnic,
     email: cachedEmail,
-    partyId: 1,
+    partyId: "", // Updated to store partyId as string
     fullName: "",
     dob: "",
     address: "",
   });
 
-  const partyOptions = [1, 2, 3, 4, 5];
+  const [partyOptions, setPartyOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchParties = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/parties");
+        if (!response.ok) {
+          throw new Error("Failed to fetch parties");
+        }
+        const data = await response.json();
+        setPartyOptions(data); // Set fetched party data
+      } catch (error) {
+        console.error("Error fetching parties:", error);
+      }
+    };
+
+    fetchParties();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +93,6 @@ const CandidateReg = () => {
     <div className="bg-[#262529] flex flex-col justify-center items-center min-h-screen text-white px-6 md:px-40">
       <h1 className="text-3xl mb-6">Candidate Registration</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
-        {/* Form fields remain the same */}
         <div className="mb-4">
           <label htmlFor="fullName" className="block mb-2">
             Full Name
@@ -157,9 +173,12 @@ const CandidateReg = () => {
             className="w-full px-4 py-2 bg-[#3b3a42] text-white border border-gray-600 rounded-md"
             required
           >
-            {partyOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
+            <option value="" disabled>
+              Select a party
+            </option>
+            {partyOptions.map((party) => (
+              <option key={party.partyId} value={party.partyId}>
+                {party.name}
               </option>
             ))}
           </select>

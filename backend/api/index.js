@@ -9,6 +9,7 @@ const Voter = require("../models/VoterModal");
 const Voting = require("../models/VotingModal");
 
 const CreatePartyRoute = require("./routes/CreatePartyRoute");
+const DuplicationCheckRoute = require("./routes/DuplicationRoute");
 
 require("dotenv").config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use(fileUpload()); // Ensure this middleware is used
 app.use("/api", CreatePartyRoute); //api routes
+app.use("/api/", DuplicationCheckRoute); //api routes
 
 // Connect to MongoDB
 mongoose
@@ -34,14 +36,6 @@ app.post("/api/createcandidate", async (req, res) => {
   const { cnic, fullName: fullname, dob, email, address, partyId } = req.body;
 
   try {
-    // Check if the candidate already exists by CNIC
-    const existingCandidate = await Candidate.findOne({ cnic });
-    if (existingCandidate) {
-      return res
-        .status(410)
-        .json({ error: "Candidate already registered with this CNIC." });
-    }
-
     // Create a new candidate instance
     const newCandidate = new Candidate({
       cnic,
@@ -67,14 +61,6 @@ app.post("/api/createcandidate", async (req, res) => {
 // Route to create a voter
 app.post("/api/register-voter", async (req, res) => {
   const { fullName, dob, cnic, address, email } = req.body;
-
-  // Check if the voter already exists by CNIC
-  const existingVoter = await Voter.findOne({ cnic });
-  if (existingVoter) {
-    return res
-      .status(410)
-      .json({ error: "Voter already registered with this CNIC." });
-  }
 
   // Age validation
   const birthDate = new Date(dob);

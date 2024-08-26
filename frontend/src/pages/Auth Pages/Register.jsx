@@ -1,3 +1,4 @@
+import { Ellipsis } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,6 +6,8 @@ const Register = () => {
   const [cnic, setCnic] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
+  const url = process.env.APIURL;
 
   const generateOtp = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -18,20 +21,51 @@ const Register = () => {
       alert("CNIC must be exactly 13 digits.");
       return;
     }
+
     console.log("CNIC:", cnic);
     console.log("Email:", email);
     localStorage.setItem("cnic", cnic);
     localStorage.setItem("email", email);
 
-    // Generate OTP
-    const otp = generateOtp();
-    console.log(otp);
-    localStorage.setItem("otp", otp);
+    let duplicatedCNCI = false;
+    try {
+      console.log("gawrjjj  ");
+
+      const responseDuplication = await fetch(`${url}/api/duplication-check`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cnic, email }),
+      });
+      console.log("gawr");
+
+      // Debugging the response
+      const data = await responseDuplication.json();
+      console.log("Response from duplication check:", data);
+
+      if (!responseDuplication.ok) {
+        duplicatedCNCI = true;
+        alert(data.error); // Show alert with error message
+      } else {
+        console.log("Unique CNIC, proceeding with OTP generation.");
+      }
+    } catch (error) {
+      console.log("dup erro:", error);
+    }
 
     try {
+      // Check for duplication first
+      if (duplicatedCNCI) {
+        throw new Error("Duplication in cnic");
+      }
+
+      // Generate OTP
+      const otp = generateOtp();
+      console.log("Generated OTP:", otp);
+      localStorage.setItem("otp", otp);
+
       // Send OTP to backend
-      // http://localhost:5000/api/send-email
-      // https://voting-backend-delta.vercel.app/api/send-email
       const response = await fetch(
         "https://voting-backend-delta.vercel.app/api/send-email",
         {
@@ -47,10 +81,10 @@ const Register = () => {
         throw new Error("Email sending failed.");
       }
 
-      console.log("Email sent");
+      console.log("Email sent successfully.");
       navigate("/otp");
     } catch (error) {
-      console.error("Error sending email:", error);
+      console.error("Error during registration process:", error);
     }
   };
 
