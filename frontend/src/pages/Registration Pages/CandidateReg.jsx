@@ -64,7 +64,7 @@ const CandidateReg = () => {
     }
 
     try {
-      const response = await fetch(`${apiURL}api/createcandidate`, {
+      const response = await fetch(`${apiURL}/api/createcandidate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,6 +83,7 @@ const CandidateReg = () => {
         }
       }
     } catch (error) {
+      console.log(error);
       alert("An error occurred while submitting the form. Please try again.");
     }
   };
