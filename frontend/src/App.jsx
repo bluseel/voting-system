@@ -25,8 +25,9 @@ function App() {
       <div>
         <PhaseProvider>
           <Routes>
-            <Route path="/" element={<LangSelect />} />
+{/*             <Route path="/" element={<LangSelect />} /> */}
             <Route path="/live-results" element={<LiveResults />} />
+            <Route path="/" element={<LiveResults />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/otp" element={<OTP />} />
