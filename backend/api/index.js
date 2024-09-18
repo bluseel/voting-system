@@ -136,7 +136,7 @@ app.post("/api/send-email", (req, res) => {
 
 // Basic route
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello Worsld");
 });
 
 // Start the server
