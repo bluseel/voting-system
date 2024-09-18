@@ -102,20 +102,9 @@
 //  ---------------------------------------------------------------------------------------------
 const express = require("express");
 const router = express.Router();
-const path = require("path");
-const fs = require("fs");
-// const os = require("os");
 const imgur = require("imgur");
 const Party = require("../../models/PartyModal");
 const packageJson = require("../../package.json");
-const multer = require("multer");
-// const { promisify } = require("util");
-const schedule = require("node-schedule");
-
-// Configure multer for file uploads
-const upload = multer({
-  dest: path.join(__dirname, "..", "uploads"), // Destination folder for uploaded files
-});
 
 // Function to generate a unique 5-digit code
 const generateUniqueCode = async () => {
@@ -137,23 +126,17 @@ const generateUniqueCode = async () => {
 
 // Function to handle image upload
 const uploadImage = async (req, res) => {
-  if (!req.file) {
+  if (!req.files || !req.files.sampleFile) {
     return res.status(400).json({ error: "No files uploaded" });
   }
 
-  const file = req.file;
-  const uploadPath = path.join(__dirname, "..", "uploads", file.filename);
-  const newFileName = Date.now() + "_" + file.originalname;
-  const newFilePath = path.join(__dirname, "..", "uploads", newFileName);
-
-  fs.renameSync(uploadPath, newFilePath); // Rename the file to include a timestamp
+  const sampleFile = req.files.sampleFile;
 
   try {
-    const result = await imgur.uploadFile(newFilePath);
-    fs.unlinkSync(newFilePath); // Remove file from server after uploading
+    const result = await imgur.uploadFile(sampleFile.tempFilePath);
+    console.log(result);
     res.send(result);
   } catch (err) {
-    fs.unlinkSync(newFilePath);
     res
       .status(500)
       .json({ error: "Error uploading to Imgur", details: err.message });
@@ -161,7 +144,7 @@ const uploadImage = async (req, res) => {
 };
 
 // Route to handle file upload
-router.post("/upload-logo", upload.single("sampleFile"), uploadImage);
+router.post("/upload-logo", uploadImage);
 
 // Route to handle creating a party
 router.post("/create-party", async (req, res) => {
@@ -191,39 +174,11 @@ router.post("/create-party", async (req, res) => {
   }
 });
 
-// Route to get version info
 router.get("/version-info", (req, res) => {
   res.json({
     imgurVersion: packageJson.dependencies.imgur,
     // Add other package versions as needed
   });
 });
-
-// Schedule a job to delete files older than 24 hours
-const deleteOldUploads = async () => {
-  const uploadDir = path.join(__dirname, "..", "uploads");
-  fs.readdir(uploadDir, (err, files) => {
-    if (err) throw err;
-
-    const now = Date.now();
-    files.forEach((file) => {
-      const filePath = path.join(uploadDir, file);
-      fs.stat(filePath, (err, stats) => {
-        if (err) throw err;
-
-        if (now - stats.mtimeMs > 24 * 60 * 60 * 1000) {
-          // 24 hours
-          fs.unlink(filePath, (err) => {
-            if (err) throw err;
-            console.log(`Deleted old file: ${filePath}`);
-          });
-        }
-      });
-    });
-  });
-};
-
-// Run the cleanup job every 24 hours
-schedule.scheduleJob("0 0 * * *", deleteOldUploads);
 
 module.exports = router;
