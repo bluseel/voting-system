@@ -37,8 +37,8 @@ const CreateParty = () => {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error("Failed to upload logo");
-        console.log(uploadResponse);
+        // throw new Error("Failed to upload logo");
+        throw new Error(uploadResponse);
       }
 
       const uploadResult = await uploadResponse.json();
