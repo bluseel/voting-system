@@ -1,0 +1,37 @@
+Here's the updated post with emojis:
+
+---
+
+### 🗳️ Online Voting System using MERN-Stack + Imgur + SendGrid + Twilio 🌐
+
+This is a hobby project focused on improving my overall web development skills, particularly backend development. The web design is secondary, as the project emphasizes backend functionality.
+
+#### What's special about this project:
+
+1. ✉️ **SendGrid**: Used to send emails directly via JavaScript.
+
+2. 📲 **Twilio**: Allows sending messages directly from JavaScript.
+
+3. 🖼️ **Imgur API**: Used to upload party logos.
+
+4. 🔐 **Two-Factor Authentication**: Secured via email.
+
+**Note**: After clicking any button, please wait a moment — it’s likely loading ⏳.
+
+---
+
+### ⚙️ Key Features:
+
+- 👨‍💻 **Admin Console**: The admin can manage voting phases (registration, voting, results) and reset the entire database for a fresh start. Only the admin has the ability to create new political parties.
+
+- 🗂️ **Voter & Candidate Registration**: Users sign up during the registration phase. Only registered voters can participate in the voting process.
+
+- 📊 **Live Poll Results**: The homepage displays live polling results in descending order.
+
+---
+
+Check it out:
+
+- 🌍 [Website](https://voting-frontend-delta.vercel.app/)
+
+- 🛠️ [Admin Console](https://voting-frontend-delta.vercel.app/admin)
