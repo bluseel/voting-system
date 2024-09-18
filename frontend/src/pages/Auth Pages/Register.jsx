@@ -144,7 +144,7 @@ const Register = () => {
         <div>
           <button
             type="submit"
-            className="w-full mt-10 bg-[#1C7D37] text-white px-6 py-4 rounded"
+            className="w-full mt-10 bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded"
           >
             <img src="/check.svg" alt="" className="h-10 w-full" />
           </button>

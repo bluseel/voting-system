@@ -100,7 +100,7 @@ const LiveResults = () => {
                 "The final results are in"
               ) : (
                 <button
-                  className="bg-[#1C7D37] px-5 py-2 mt-2 w-full font-bold"
+                  className="bg-[#1C7D37] px-5 py-2 mt-2 w-full font-bold hover:opacity-80 active:bg-[#0a2b13]"
                   onClick={handleSubmit}
                 >
                   {currentPhase === "registration"

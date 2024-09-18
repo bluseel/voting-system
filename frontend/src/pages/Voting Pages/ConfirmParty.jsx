@@ -72,7 +72,7 @@ const ConfirmParty = () => {
       <div className="flex w-full space-x-5">
         <button
           onClick={handleConfirm}
-          className="mt-10 w-full bg-[#1C7D37] text-white px-6 py-4 rounded"
+          className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded"
         >
           <img src="/check.svg" alt="Submit" className="h-10 w-full" />
         </button>

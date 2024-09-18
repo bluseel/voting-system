@@ -102,7 +102,7 @@ const CreateParty = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-2 bg-[#4a4a4e] text-white font-bold rounded-md hover:bg-[#5a5a5e] transition duration-200"
+          className="w-full py-2 bg-[#4a4a4e] hover:opacity-80 active:bg-[#414144] text-white font-bold rounded-md hover:bg-[#5a5a5e] transition duration-200"
         >
           Create Party
         </button>

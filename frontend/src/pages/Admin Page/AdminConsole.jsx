@@ -105,7 +105,7 @@ const AdminConsole = () => {
         {/* Create New Party Button */}
         <button
           onClick={handleCreateNewParty}
-          className="mt-10 w-full bg-[#1C7D37] text-white px-6 py-4 rounded text-2xl"
+          className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded text-2xl"
         >
           Create New Party
         </button>
@@ -113,7 +113,7 @@ const AdminConsole = () => {
         {/* Restart Everything Button */}
         <button
           onClick={restartEverything}
-          className="mt-10 w-full bg-[#1C7D37] text-white px-6 py-4 rounded text-2xl"
+          className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded text-2xl"
         >
           Restart Everything
         </button>
@@ -121,7 +121,7 @@ const AdminConsole = () => {
         {/* Next Phase Button */}
         <button
           onClick={nextPhase}
-          className="mt-10 w-full bg-[#1C7D37] text-white px-6 py-4 rounded text-2xl"
+          className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded text-2xl"
         >
           Next Phase
         </button>
