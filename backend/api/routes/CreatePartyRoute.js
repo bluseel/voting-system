@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const imgur = require("imgur");
 const Party = require("../../models/PartyModal");
+const packageJson = require("../../package.json");
 
 // Function to generate a unique 5-digit code
 const generateUniqueCode = async () => {
