@@ -141,12 +141,16 @@ const uploadImage = async (req, res) => {
 
   try {
     // Send POST request to Imgur API
-    const response = await axios.post("https://api.imgur.com/3/image", formData, {
-      headers: {
-        "Authorization": "Client-ID 546c25a59c58ad7", // Replace with your Client-ID
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(
+      "https://api.imgur.com/3/image",
+      formData,
+      {
+        headers: {
+          Authorization: "Client-ID 546c25a59c58ad7", // Replace with your Client-ID
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     // If successful, log the response and send it back
     console.log(response.data);
@@ -165,7 +169,6 @@ const uploadImage = async (req, res) => {
     });
   }
 };
-
 
 // Route to handle file upload
 router.post("/upload-logo", uploadImage);
