@@ -8,6 +8,7 @@ const CreateParty = () => {
     partyName: "",
     partyLogo: null,
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -19,9 +20,10 @@ const CreateParty = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(""); // Reset error message
 
     if (!formData.partyName || !formData.partyLogo) {
-      alert("Please provide both a party name and a logo.");
+      setErrorMessage("Please provide both a party name and a logo.");
       return;
     }
 
@@ -41,7 +43,7 @@ const CreateParty = () => {
       }
 
       const uploadResult = await uploadResponse.json();
-      const logoUrl = await uploadResult.link;
+      const logoUrl = uploadResult.imageUrl;
 
       // Save party details to MongoDB
       const partyData = {
@@ -64,6 +66,7 @@ const CreateParty = () => {
       console.log("Party created successfully");
       navigate("/success");
     } catch (error) {
+      setErrorMessage(`Error: ${error.message}`);
       console.error("Error creating party:", error);
     }
   };
@@ -72,6 +75,11 @@ const CreateParty = () => {
     <div className="bg-[#262529] flex flex-col place-content-center items-center min-h-screen text-white px-40">
       <h1 className="text-3xl mb-6">Create New Party</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
+        {errorMessage && (
+          <div className="mb-4 text-red-500">
+            <p>{errorMessage}</p>
+          </div>
+        )}
         <div className="mb-4">
           <label htmlFor="partyName" className="block mb-2">
             Party Name

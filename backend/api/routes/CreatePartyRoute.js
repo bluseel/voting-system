@@ -125,22 +125,40 @@ const generateUniqueCode = async () => {
 };
 
 // Function to handle image upload
-const uploadImage = async (req, res) => {
+// Function to handle image upload to Imgur with your Client-ID
+const uploadImage = (req, res) => {
+  // Check if file is uploaded
   if (!req.files || !req.files.sampleFile) {
     return res.status(400).json({ error: "No files uploaded" });
   }
 
   const sampleFile = req.files.sampleFile;
 
-  try {
-    const result = await imgur.uploadFile(sampleFile.tempFilePath);
-    console.log(result);
-    res.send(result);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Error uploading to Imgur", details: err.message });
-  }
+  // Prepare FormData to send to Imgur
+  const formData = new FormData();
+  formData.append("image", sampleFile.data);
+
+  // Upload image using your Client-ID
+  imgur.setClientId("546c25a59c58ad7"); // Replace with your actual Client-ID
+
+  imgur
+    .uploadBase64(sampleFile.data.toString("base64"))
+    .then((result) => {
+      const photo = result.link;
+      const photo_hash = result.deletehash;
+
+      console.log(result);
+      res.json({
+        imageUrl: photo,
+        deleteHash: photo_hash,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      res
+        .status(500)
+        .json({ error: "Error uploading to Imgur", details: err.message });
+    });
 };
 
 // Route to handle file upload
