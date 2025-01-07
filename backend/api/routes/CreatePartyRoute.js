@@ -125,23 +125,47 @@ const generateUniqueCode = async () => {
 };
 
 // Function to handle image upload
+
+// Route for uploading image
 const uploadImage = async (req, res) => {
+  // Check if file is uploaded
   if (!req.files || !req.files.sampleFile) {
     return res.status(400).json({ error: "No files uploaded" });
   }
 
   const sampleFile = req.files.sampleFile;
 
+  // Prepare FormData to send to Imgur
+  const formData = new FormData();
+  formData.append("image", sampleFile.data);
+
   try {
-    const result = await imgur.uploadFile(sampleFile.tempFilePath);
-    console.log(result);
-    res.send(result);
+    // Send POST request to Imgur API
+    const response = await axios.post("https://api.imgur.com/3/image", formData, {
+      headers: {
+        "Authorization": "Client-ID 546c25a59c58ad7", // Replace with your Client-ID
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // If successful, log the response and send it back
+    console.log(response.data);
+    const photo = response.data.data.link;
+    const photo_hash = response.data.data.deletehash;
+
+    res.json({
+      imageUrl: photo,
+      deleteHash: photo_hash,
+    });
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Error uploading to Imgur", details: err.message });
+    console.error(err);
+    res.status(500).json({
+      error: "Error uploading to Imgur",
+      details: err.message,
+    });
   }
 };
+
 
 // Route to handle file upload
 router.post("/upload-logo", uploadImage);
