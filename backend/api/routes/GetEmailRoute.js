@@ -2,12 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Candidate = require("../../models/CandidateModal");
 const Voter = require("../../models/VoterModal");
+const Voting = require("../../models/VotingModal");
 
 // Route to fetch email based on CNIC
 router.post("/get-email", async (req, res) => {
   const { cnic } = req.body;
 
   try {
+    // Check if the CNIC already exists in the voting table
+    const voting = await Voting.findOne({ cnicVoter: cnic });
+
+    if (voting) {
+      return res.status(899).json({ error: "CNIC has already voted." });
+    }
+
     // Check if the CNIC belongs to a candidate
     const candidate = await Candidate.findOne({ cnic });
     if (candidate) {

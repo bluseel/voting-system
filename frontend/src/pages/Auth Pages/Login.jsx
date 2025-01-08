@@ -41,10 +41,15 @@ const Login = () => {
       });
 
       const dataEmail = await responseEmail.json();
-      if (responseEmail.status === 420) {
-        alert("CNIC not registered");
-        throw new Error("Email Not Found");
+      if (responseEmail.status === 899) {
+        alert("Vote already casted with this cnic");
+        throw new Error("Already Voted");
       }
+      if (responseEmail.status === 420) {
+        alert("CNIC was not registered for voting");
+        throw new Error("CNIC not found");
+      }
+
       if (!responseEmail.ok || !dataEmail.email) {
         throw new Error("Failed to fetch email.");
       }
