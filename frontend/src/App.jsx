@@ -18,6 +18,7 @@ import SuccessVote from "./pages/Voting Pages/SuccessVote";
 import AdminConsole from "./pages/Admin Page/AdminConsole";
 import { PhaseProvider } from "./PhaseContext";
 import CreateParty from "./pages/Admin Page/CreateParty";
+import DatabaseView from "./pages/Admin Page/DatabaseView";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/successvote" element={<SuccessVote />} />
             <Route path="/admin" element={<AdminConsole />} />
             <Route path="/createnewparty" element={<CreateParty />} />
+            <Route path="/viewdatabase" element={<DatabaseView />} />
           </Routes>
         </PhaseProvider>
       </div>

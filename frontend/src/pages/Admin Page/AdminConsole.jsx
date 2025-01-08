@@ -18,6 +18,12 @@ const AdminConsole = () => {
     navigate("/createnewparty");
   };
 
+  // Function to handle "Create New Party" button click
+  const viewDatabase = () => {
+    console.log("Creating a new party...");
+    navigate("/viewdatabase");
+  };
+
   // Function to update the phase class based on the current phase
   const updatePhaseClass = () => {
     const newPhaseClass = {
@@ -108,6 +114,13 @@ const AdminConsole = () => {
           className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded text-2xl"
         >
           Create New Party
+        </button>
+
+        <button
+          onClick={viewDatabase}
+          className="mt-10 w-full bg-[#1C7D37] hover:opacity-80 active:bg-[#0a2b13] text-white px-6 py-4 rounded text-2xl"
+        >
+          Database
         </button>
 
         {/* Restart Everything Button */}

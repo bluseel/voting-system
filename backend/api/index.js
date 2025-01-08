@@ -15,6 +15,7 @@ const GetEmailRoute = require("./routes/GetEmailRoute");
 const VotingRoute = require("./routes/VotingRoute");
 const PartyVotesRoute = require("./routes/PartyVotesRoute");
 const AdminRoutes = require("./routes/AdminRoutes");
+const AdminDatabaseViewerRoute = require("./routes/ViewDatabase");
 
 require("dotenv").config();
 
@@ -30,6 +31,7 @@ app.use("/api/", GetEmailRoute); //api routes
 app.use("/api/", VotingRoute); //api routes
 app.use("/api/", PartyVotesRoute); //api routes
 app.use("/api/", AdminRoutes); //api routes
+app.use("/api/", AdminDatabaseViewerRoute); //api routes
 
 // Connect to MongoDB
 
