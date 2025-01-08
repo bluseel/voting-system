@@ -44,7 +44,7 @@ const Database = () => {
           <thead>
             <tr className="bg-[#1C7D37]">
               <th className="border border-gray-600 px-4 py-2">Party Name</th>
-              <th className="border border-gray-600 px-4 py-2">Voter Name</th>
+              <th className="border border-gray-600 px-4 py-2">Voter ID</th>
               <th className="border border-gray-600 px-4 py-2">Vote Time</th>
             </tr>
           </thead>
@@ -72,12 +72,16 @@ const Database = () => {
         <table className="w-full text-left text-white border-collapse border border-gray-600">
           <thead>
             <tr className="bg-[#1C7D37]">
+              <th className="border border-gray-600 px-4 py-2">Party Id</th>
               <th className="border border-gray-600 px-4 py-2">Party Name</th>
             </tr>
           </thead>
           <tbody>
             {parties.map((party, index) => (
               <tr key={index} className="odd:bg-[#333] even:bg-[#444]">
+                <td className="border border-gray-600 px-4 py-2">
+                  {party.partyId}
+                </td>
                 <td className="border border-gray-600 px-4 py-2">
                   {party.name}
                 </td>
